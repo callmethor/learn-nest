@@ -5,6 +5,6 @@ import { logger } from './middleware/logger.middleware';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(logger);
-  await app.listen(3333);
+  await app.listen(3003);
 }
 bootstrap();

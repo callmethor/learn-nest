@@ -24,20 +24,20 @@ export class CatsService {
     },
   ];
 
-  create(cat: Cat) {
+  createCat(cat: Cat) {
     this.cats.push(cat);
   }
 
-  findAll(): Cat[] {
+  findAllCat(): Cat[] {
     return this.cats;
   }
 
-  findById(id: number): Cat[] {
+  findCatById(id: number): Cat[] {
     const cat = this.cats.filter((cat) => cat.id == id);
     return cat;
   }
 
-  delete(id: number): any {
+  deleteCat(id: number): any {
     const index = this.cats.findIndex((cat) => cat.id == id);
     this.cats.splice(index, 1);
     return this.cats;
