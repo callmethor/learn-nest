@@ -10,9 +10,28 @@ import { UsersModule } from './users/users.module';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './guard/roles.guard';
 import { AuthGuard } from './guard/auth.guard';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { UsersEntity } from './users/users.entity';
 
 @Module({
-  imports: [CatsModule, AdminModule, AuthModule, NoteModule, UsersModule],
+  imports: [
+    CatsModule,
+    AdminModule,
+    AuthModule,
+    NoteModule,
+    UsersModule,
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: 'localhost',
+      port: 3306,
+      username: 'root',
+      password: 'root',
+      database: 'learn-nest',
+      entities: [UsersEntity],
+      synchronize: true,
+      autoLoadEntities: true,
+    }),
+  ],
   providers: [
     UsersService,
     {

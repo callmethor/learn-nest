@@ -33,12 +33,12 @@ export class CatsService {
   }
 
   findCatById(id: number): Cat[] {
-    const cat = this.cats.filter((cat) => cat.id == id);
+    const cat = this.cats.filter((cat) => cat.id === id);
     return cat;
   }
 
   deleteCat(id: number): any {
-    const index = this.cats.findIndex((cat) => cat.id == id);
+    const index = this.cats.findIndex((cat) => cat.id === id);
     this.cats.splice(index, 1);
     return this.cats;
   }

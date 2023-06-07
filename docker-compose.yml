@@ -1,18 +1,18 @@
-version: '3.8'
+version: '3.9'
 services:
-  dev-database:
-    image: postgres:15.0
-    container_name: dev-database
+  my-sql:
+    image: mysql:8.0
     ports:
-    - 5434:5432
-
+    - 3306:3306
+    expose:
+      - "3306"
+    restart: always
     environment:
-      POSTGRES_USER: posdatabases
-      POSTGRES_PASSWORD: 123456
-      POSTGRES_DB: testdb
-    networks:
-      - nestjs-network
-networks:
-  netjs-network:
-
-# Create container, network,... from docker-compose file
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: learn-nest
+      MYSQL_USER: thodh
+      MYSQL_PASSWORD: root
+    volumes:
+      - type: bind
+        source: ./data/mysql
+        target: /var/lib/mysql

@@ -6,26 +6,25 @@ import {
   Param,
   NotFoundException,
   Delete,
-  UseGuards,
+  ParseIntPipe,
+  HttpStatus,
 } from '@nestjs/common';
-import { RolesGuard } from 'src/guard/roles.guard';
 import { CatsService } from './cats.service';
 
 import { CreateCatDto } from './dto/create-cat.dto';
 import { Cat } from './interface';
 import { Role } from 'src/enum/role.enum';
-import { Roles } from 'src/decorator/role.decorator';
+import { Roles } from 'src/decorator/roles.decorator';
+import { ValidationPipe } from 'src/pipe/validation.pipe';
 
 @Controller('cats')
-@UseGuards(RolesGuard)
 export class CatsController {
   constructor(private catsService: CatsService) {}
 
-  @Roles(Role.Admin)
+  // @Roles(Role.Admin)
   @Post()
-  async create(@Body() createCatDto: CreateCatDto) {
+  async create(@Body(new ValidationPipe()) createCatDto: CreateCatDto) {
     this.catsService.createCat(createCatDto);
-
     return this.catsService;
   }
 
@@ -35,7 +34,15 @@ export class CatsController {
   }
 
   @Get('/:id')
-  async show(@Param('id') id: number): Promise<Cat[]> {
+  async show(
+    @Param(
+      'id',
+      new ParseIntPipe({
+        errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE,
+      }),
+    )
+    id: number,
+  ): Promise<Cat[]> {
     const cat = await this.catsService.findCatById(id);
     if (!cat) {
       throw new NotFoundException();
@@ -45,7 +52,7 @@ export class CatsController {
   }
 
   @Delete('/:id')
-  destroy(@Param('id') id: number): Promise<any> {
+  destroy(@Param('id', ParseIntPipe) id: number): Promise<any> {
     return this.catsService.deleteCat(id);
   }
 }

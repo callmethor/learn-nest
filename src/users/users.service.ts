@@ -1,36 +1,46 @@
 import { Injectable } from '@nestjs/common';
-
-// This should be a real class/interface representing a user entity
-export type User = any;
+import { InjectRepository } from '@nestjs/typeorm';
+import { UsersEntity } from './users.entity';
+import { Repository } from 'typeorm';
+import { UserDto } from './dto/users.dto';
 
 @Injectable()
 export class UsersService {
-  private readonly users = [
-    {
-      userId: 1,
-      username: 'imthodh',
-      roles: 'admin',
-      password: '123456',
-    },
-    {
-      userId: 2,
-      username: 'thodh',
-      roles: 'user',
-      password: '123456',
-    },
-  ];
+  constructor(
+    @InjectRepository(UsersEntity)
+    private usersRepository: Repository<UsersEntity>,
+  ) {}
 
-  async findOne(username: string): Promise<User> {
-    const userInfo = this.users.find((user) => user?.username == username);
+  async findByUserName(username: string): Promise<UsersEntity> {
+    const userInfo = this.usersRepository.findOneBy({
+      username: username,
+    });
     return userInfo;
   }
 
-  async findUserById(id: number): Promise<User> {
-    const userInfo = this.users.find((user) => user?.userId == id);
+  async findUserById(id: number): Promise<UsersEntity> {
+    const userInfo = this.usersRepository.findOneBy({
+      id: id,
+    });
     return userInfo;
   }
 
-  async getAllUsers(): Promise<User> {
-    return this.users;
+  async findAll(): Promise<UsersEntity[]> {
+    return await this.usersRepository.find();
+  }
+
+  async createUser(userInfo: UsersEntity): Promise<UsersEntity> {
+    return this.usersRepository.save(userInfo);
+    // return this.usersRepository.findOne({ where: { userId: userInfo.userId } });
+  }
+
+  async updateUser(id: number, userInfo: UserDto): Promise<UserDto> {
+    await this.usersRepository.update(id, userInfo);
+    return this.findUserById(id);
+  }
+
+  async deleteUserById(id: number): Promise<{ result: string }> {
+    await this.usersRepository.softDelete(id);
+    return { result: 'Deleted Success!' };
   }
 }

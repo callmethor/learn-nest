@@ -31,7 +31,7 @@ export class AuthController {
   @UseGuards(AuthGuard)
   @Get('profile')
   getProfile(@Request() req) {
-    const userInfo = this.usersService.findOne(req.user.username);
+    const userInfo: any = this.usersService.findByUserName(req.user.username);
     return userInfo;
   }
 }
