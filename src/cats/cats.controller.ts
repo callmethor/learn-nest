@@ -16,7 +16,9 @@ import { Cat } from './interface';
 import { Role } from 'src/enum/role.enum';
 import { Roles } from 'src/decorator/roles.decorator';
 import { ValidationPipe } from 'src/pipe/validation.pipe';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Cat API')
 @Controller('cats')
 export class CatsController {
   constructor(private catsService: CatsService) {}
