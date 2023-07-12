@@ -43,17 +43,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('API Document of the Learn Nest Project')
     .setDescription('learn-nest API document')
-    .addTag('Learn Project API')
-    .addBearerAuth(
-      {
-        description: 'Default JWT Authorization',
-        type: 'http',
-        in: 'header',
-        scheme: 'bearer',
-        bearerFormat: 'JWT',
-      },
-      'defaultBearerAuth',
-    )
+    .addBearerAuth() // The API will use Bearer Authentication
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);

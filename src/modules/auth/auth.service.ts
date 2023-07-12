@@ -20,8 +20,9 @@ export class AuthService {
     const { username, password } = loginInfo;
 
     const filteredUsers = await this.usersService.findByUserName(username);
+    const passwordIsMatch = await isMatch(password, filteredUsers?.password);
 
-    if (!isMatch(password, filteredUsers.password)) {
+    if (!passwordIsMatch) {
       throw new UnauthorizedException();
     }
 

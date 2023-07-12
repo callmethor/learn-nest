@@ -37,6 +37,7 @@ export class UsersService {
     const uid: string = uuidv4();
 
     const newUser = new UsersEntity({
+      id: uid,
       username,
       password: hashedPassword,
       email,

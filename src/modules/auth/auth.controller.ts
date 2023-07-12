@@ -12,11 +12,16 @@ import { AuthService } from './auth.service';
 import { AuthGuard } from 'src/guard/auth.guard';
 import { SignInDto, SignUpDto } from './dto';
 import { Public } from 'src/decorator/public.decorator';
-import { ApiBody, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { UsersService } from '../users/users.service';
 import { UsersEntity } from '../users/entities/users.entity';
 
-@ApiTags('Login API')
+@ApiTags('Auth Controller')
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -62,6 +67,7 @@ export class AuthController {
     return this.authService.signUp(createUserDto);
   }
 
+  @ApiBearerAuth()
   @UseGuards(AuthGuard)
   @ApiOkResponse({ description: 'get profile user login' })
   @Get('profile')
