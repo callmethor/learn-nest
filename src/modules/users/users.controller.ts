@@ -9,9 +9,9 @@ import {
   Put,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { UsersEntity } from './users.entity';
+import { UsersEntity } from './entities/users.entity';
 import { UserDto } from './dto/users.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
 @ApiTags('User API')
 @Controller('users')
 export class UsersController {
@@ -23,7 +23,7 @@ export class UsersController {
   }
 
   @Get('/:id')
-  async getUserById(@Param('id') id: number): Promise<any> {
+  async getUserById(@Param('id') id: string): Promise<any> {
     const user = await this.usersService.findUserById(id);
     if (!user) {
       throw new NotFoundException();
@@ -31,18 +31,27 @@ export class UsersController {
     return user;
   }
 
-  @Post()
-  async createUser(@Body() userInfo: UsersEntity): Promise<UserDto> {
-    await this.usersService.createUser(userInfo);
-    return await this.usersService.findByUserName(userInfo?.username);
-  }
-
   @Put('/:id')
+  @ApiBody({
+    type: UserDto,
+    examples: {
+      update_user: {
+        value: {
+          username: 'admin',
+          password: '123456',
+          roles: 'admin',
+          firstName: 'Torao',
+          lastName: 'XXL',
+          email: 'example@example.com',
+        } as UserDto,
+      },
+    },
+  })
   async updateUser(
     @Param('id') id: string,
     @Body() userInfo: UserDto,
   ): Promise<UserDto> {
-    return await this.usersService.updateUser(Number(id), userInfo);
+    return await this.usersService.updateUser(id, userInfo);
   }
 
   @Delete('/:id')

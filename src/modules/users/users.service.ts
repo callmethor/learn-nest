@@ -1,8 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UsersEntity } from './users.entity';
 import { Repository } from 'typeorm';
 import { UserDto } from './dto/users.dto';
+import { UsersEntity } from './entities/users.entity';
+import { hashPassword } from 'src/utils/hashPassword';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class UsersService {
@@ -18,7 +20,7 @@ export class UsersService {
     return userInfo;
   }
 
-  async findUserById(id: number): Promise<UsersEntity> {
+  async findUserById(id: string): Promise<UsersEntity> {
     const userInfo = this.usersRepository.findOneBy({
       id: id,
     });
@@ -30,11 +32,20 @@ export class UsersService {
   }
 
   async createUser(userInfo: UsersEntity): Promise<UsersEntity> {
-    return this.usersRepository.save(userInfo);
-    // return this.usersRepository.findOne({ where: { userId: userInfo.userId } });
+    const { username, password, email } = userInfo;
+    const hashedPassword = await hashPassword(password);
+    const uid: string = uuidv4();
+
+    const newUser = new UsersEntity({
+      username,
+      password: hashedPassword,
+      email,
+    });
+
+    return this.usersRepository.save(newUser);
   }
 
-  async updateUser(id: number, userInfo: UserDto): Promise<UserDto> {
+  async updateUser(id: string, userInfo: UserDto): Promise<UserDto> {
     await this.usersRepository.update(id, userInfo);
     return this.findUserById(id);
   }

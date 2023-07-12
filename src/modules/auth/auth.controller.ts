@@ -10,10 +10,11 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from 'src/guard/auth.guard';
-import { SignInDto } from './dto';
+import { SignInDto, SignUpDto } from './dto';
 import { Public } from 'src/decorator/public.decorator';
-import { UsersService } from 'src/users/users.service';
 import { ApiBody, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { UsersService } from '../users/users.service';
+import { UsersEntity } from '../users/entities/users.entity';
 
 @ApiTags('Login API')
 @Controller('auth')
@@ -33,13 +34,32 @@ export class AuthController {
       user_1: {
         value: {
           username: 'admin',
-          password: '1232@asdS',
+          password: '123456',
         } as SignInDto,
       },
     },
   })
   signIn(@Body() signInDto: SignInDto) {
     return this.authService.signIn(signInDto);
+  }
+
+  @Public()
+  @Post('signup')
+  @ApiOkResponse({ description: 'Login Success' })
+  @ApiBody({
+    type: SignUpDto,
+    examples: {
+      user_1: {
+        value: {
+          username: 'admin',
+          password: '123456',
+          email: 'admin@example.com',
+        } as SignUpDto,
+      },
+    },
+  })
+  signup(@Body() createUserDto: SignUpDto): Promise<UsersEntity> {
+    return this.authService.signUp(createUserDto);
   }
 
   @UseGuards(AuthGuard)

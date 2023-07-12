@@ -1,24 +1,17 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { CatsController } from './cats/cats.controller';
-import { CatsModule } from './cats/cats.module';
 import { logger } from './middleware/logger.middleware';
-import { AdminModule } from './admin/admin.module';
-import { AuthModule } from './auth/auth.module';
-import { NoteModule } from './note/note.module';
-import { UsersService } from './users/users.service';
-import { UsersModule } from './users/users.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { UsersService } from './modules/users/users.service';
+import { UsersModule } from './modules/users/users.module';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './guard/roles.guard';
 import { AuthGuard } from './guard/auth.guard';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UsersEntity } from './users/users.entity';
+import { UsersEntity } from './modules/users/entities/users.entity';
 
 @Module({
   imports: [
-    CatsModule,
-    AdminModule,
     AuthModule,
-    NoteModule,
     UsersModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
@@ -46,6 +39,6 @@ import { UsersEntity } from './users/users.entity';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(logger).forRoutes(CatsController);
+    consumer.apply(logger).forRoutes();
   }
 }

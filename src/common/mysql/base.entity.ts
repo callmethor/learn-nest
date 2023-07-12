@@ -1,3 +1,4 @@
+import { Expose } from 'class-transformer';
 import {
   CreateDateColumn,
   DeleteDateColumn,
@@ -6,21 +7,25 @@ import {
 } from 'typeorm';
 
 export class BaseEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @Expose()
+  @PrimaryGeneratedColumn('uuid')
+  id?: string;
 
+  @Expose()
   @CreateDateColumn({
     name: 'created_at',
   })
-  createdAt: Date;
+  createdAt?: Date;
 
+  @Expose()
   @UpdateDateColumn({
     name: 'updated_at',
   })
-  updatedAt: Date;
+  updatedAt?: Date;
 
+  @Expose()
   @DeleteDateColumn({
     name: 'deleted_at',
   })
-  deletedAt: Date;
+  deletedAt?: Date;
 }

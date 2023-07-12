@@ -2,8 +2,8 @@ import { Expose } from 'class-transformer';
 
 export class UserDto {
   @Expose()
-  id: number;
+  id?: string;
 
   username: string;
-  roles: string;
+  roles?: string;
 }
