@@ -32,7 +32,7 @@
 $ npm install
 ```
 
-# create folder data/mysql & run docker-compose in root folder
+## create folder data/mysql & run docker-compose in root folder to create DB
 ```bash
 $ docker-compose up -d
 ```
