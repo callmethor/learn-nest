@@ -51,7 +51,7 @@ export class UsersService {
     return this.findUserById(id);
   }
 
-  async deleteUserById(id: number): Promise<{ result: string }> {
+  async deleteUserById(id: string): Promise<{ result: string }> {
     await this.usersRepository.softDelete(id);
     return { result: 'Deleted Success!' };
   }

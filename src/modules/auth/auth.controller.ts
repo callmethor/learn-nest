@@ -71,8 +71,12 @@ export class AuthController {
   @UseGuards(AuthGuard)
   @ApiOkResponse({ description: 'get profile user login' })
   @Get('profile')
-  getProfile(@Request() req) {
-    const userInfo: any = this.usersService.findByUserName(req.user.username);
+  async getProfile(@Request() req) {
+    const userInfo: any = await this.usersService.findByUserName(
+      req.user.username,
+    );
+    delete userInfo.password;
+
     return userInfo;
   }
 }

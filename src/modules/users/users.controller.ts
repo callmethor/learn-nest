@@ -11,10 +11,11 @@ import { UsersService } from './users.service';
 import { UsersEntity } from './entities/users.entity';
 import { UserDto } from './dto/users.dto';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
-import { Roles } from 'src/decorator/roles.decorator';
+import { HasRoles } from 'src/decorator/roles.decorator';
 import { Role } from 'src/enum/role.enum';
 @ApiTags('User Controllers')
 @Controller('users')
+@HasRoles(Role.Admin)
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
@@ -58,7 +59,7 @@ export class UsersController {
 
   @ApiBearerAuth()
   @Delete('/:id')
-  async deleteUserById(@Param('id') id: number): Promise<any> {
+  async deleteUserById(@Param('id') id: string): Promise<any> {
     return await this.usersService.deleteUserById(id);
   }
 }

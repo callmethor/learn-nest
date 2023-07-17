@@ -29,7 +29,9 @@ export class AuthService {
     const payload = {
       sub: filteredUsers?.id,
       username: filteredUsers?.username,
+      roles: filteredUsers?.roles,
     };
+    delete filteredUsers.password;
     return {
       ...filteredUsers,
       access_token: await this.jwtService.signAsync(payload),

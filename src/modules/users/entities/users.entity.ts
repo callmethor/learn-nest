@@ -1,5 +1,6 @@
 import { Exclude, Expose } from 'class-transformer';
 import { BaseEntity } from 'src/common/mysql/base.entity';
+import { Role } from 'src/enum/role.enum';
 import { Column, Entity } from 'typeorm';
 
 @Entity({
@@ -25,7 +26,7 @@ export class UsersEntity extends BaseEntity {
     enum: ['admin', 'student', 'teacher'],
     default: 'student',
   })
-  roles?: string;
+  roles?: Role[];
 
   @Exclude() // Using the class-transformer to make sure the password is excluded from results that are returned to the user
   @Column({
