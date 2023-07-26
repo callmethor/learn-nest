@@ -25,15 +25,16 @@ import { UsersEntity } from './modules/users/entities/users.entity';
       autoLoadEntities: true,
     }),
   ],
+  // AuthGuard must be defined before RolesGuard
   providers: [
     UsersService,
     {
       provide: APP_GUARD,
-      useClass: RolesGuard,
+      useClass: AuthGuard,
     },
     {
       provide: APP_GUARD,
-      useClass: AuthGuard,
+      useClass: RolesGuard,
     },
   ],
 })

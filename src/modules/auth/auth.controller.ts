@@ -6,17 +6,23 @@ import {
   HttpStatus,
   UseGuards,
   Get,
+  Req,
   Request,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from 'src/guard/auth.guard';
 import { SignInDto, SignUpDto } from './dto';
 import { Public } from 'src/decorator/public.decorator';
-import { ApiBody, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { UsersService } from '../users/users.service';
 import { UsersEntity } from '../users/entities/users.entity';
 
-@ApiTags('Login API')
+@ApiTags('Auth Controller')
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -44,8 +50,9 @@ export class AuthController {
   }
 
   @Public()
+  @HttpCode(HttpStatus.CREATED)
   @Post('signup')
-  @ApiOkResponse({ description: 'Login Success' })
+  @ApiOkResponse({ description: 'Sign Up Success' })
   @ApiBody({
     type: SignUpDto,
     examples: {
@@ -62,11 +69,36 @@ export class AuthController {
     return this.authService.signUp(createUserDto);
   }
 
+  @ApiBearerAuth()
+  @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard)
   @ApiOkResponse({ description: 'get profile user login' })
   @Get('profile')
-  getProfile(@Request() req) {
-    const userInfo: any = this.usersService.findByUserName(req.user.username);
+  async getProfile(@Request() req) {
+    const userInfo: any = await this.usersService.findByUserName(
+      req.user.username,
+    );
+    delete userInfo.password;
+
     return userInfo;
+  }
+
+  @ApiBearerAuth()
+  @Post('/logout')
+  @HttpCode(HttpStatus.OK)
+  logout(@Req() req) {
+    //get user id from jwt token
+    const user = req.user;
+    return this.authService.logout(user?.sub);
+  }
+
+  @ApiBearerAuth()
+  @Get('refresh')
+  @HttpCode(HttpStatus.OK)
+  refreshToken(@Req() req) {
+    const user = req?.user;
+    const refreshToken = req.get('authorization').replace('Bearer', '').trim();
+
+    return this.authService.refreshToken(user?.sub, refreshToken);
   }
 }
