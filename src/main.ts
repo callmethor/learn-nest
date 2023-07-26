@@ -48,6 +48,10 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(process.env.PORT ? parseInt(process.env.PORT) : 3003);
+  await app.listen(process.env.PORT);
+  console.log(
+    'Click to open Swagger APi: ',
+    `http://localhost:${process.env.PORT}/api`,
+  );
 }
 bootstrap();

@@ -35,6 +35,9 @@ export class UsersEntity extends BaseEntity {
   })
   password: string;
 
+  @Column({ type: 'varchar', default: null })
+  refresh_token?: string;
+
   constructor(partial?: Partial<UsersEntity>) {
     super();
     Object.assign(this, partial);

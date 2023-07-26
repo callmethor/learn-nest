@@ -11,11 +11,8 @@ import { UsersService } from './users.service';
 import { UsersEntity } from './entities/users.entity';
 import { UserDto } from './dto/users.dto';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
-import { HasRoles } from 'src/decorator/roles.decorator';
-import { Role } from 'src/enum/role.enum';
 @ApiTags('User Controllers')
 @Controller('users')
-@HasRoles(Role.Admin)
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
