@@ -26,4 +26,6 @@ export class SignUpDto extends AuthCredentialsDto {
   @IsNotEmpty()
   @IsEmail()
   email: string;
+
+  refreshToken: string | null;
 }
