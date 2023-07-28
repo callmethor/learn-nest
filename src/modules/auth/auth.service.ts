@@ -68,10 +68,7 @@ export class AuthService {
     this.updateRefreshTokenHash(filteredUsers?.id, tokens?.refresh_token);
     delete filteredUsers?.password;
 
-    return {
-      ...filteredUsers,
-      ...tokens,
-    };
+    return tokens;
   }
 
   async logout(userId: string) {
