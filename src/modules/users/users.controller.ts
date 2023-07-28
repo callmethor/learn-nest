@@ -3,14 +3,22 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   NotFoundException,
   Param,
   Put,
+  Request,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersEntity } from './entities/users.entity';
 import { UserDto } from './dto/users.dto';
-import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 @ApiTags('User Controllers')
 @Controller('users')
 export class UsersController {
@@ -20,6 +28,20 @@ export class UsersController {
   @Get()
   async findAllUsers(): Promise<UsersEntity[]> {
     return this.usersService.findAll();
+  }
+
+  @ApiBearerAuth()
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({ description: 'get profile user login' })
+  @Get('me')
+  async getProfile(@Request() req) {
+    const userInfo: any = await this.usersService.findByUserName(
+      req.user.username,
+    );
+    delete userInfo.password;
+    delete userInfo.refresh_token;
+
+    return userInfo;
   }
 
   @ApiBearerAuth()

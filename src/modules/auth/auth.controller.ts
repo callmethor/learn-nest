@@ -4,13 +4,10 @@ import {
   Post,
   HttpCode,
   HttpStatus,
-  UseGuards,
   Get,
   Req,
-  Request,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { AuthGuard } from 'src/guard/auth.guard';
 import { SignInDto, SignUpDto } from './dto';
 import { Public } from 'src/decorator/public.decorator';
 import {
@@ -19,16 +16,12 @@ import {
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { UsersService } from '../users/users.service';
 import { UsersEntity } from '../users/entities/users.entity';
 
 @ApiTags('Auth Controller')
 @Controller('auth')
 export class AuthController {
-  constructor(
-    private authService: AuthService,
-    private usersService: UsersService,
-  ) {}
+  constructor(private authService: AuthService) {}
 
   @Public()
   @HttpCode(HttpStatus.OK)
@@ -67,20 +60,6 @@ export class AuthController {
   })
   signup(@Body() createUserDto: SignUpDto): Promise<UsersEntity> {
     return this.authService.signUp(createUserDto);
-  }
-
-  @ApiBearerAuth()
-  @HttpCode(HttpStatus.OK)
-  @UseGuards(AuthGuard)
-  @ApiOkResponse({ description: 'get profile user login' })
-  @Get('profile')
-  async getProfile(@Request() req) {
-    const userInfo: any = await this.usersService.findByUserName(
-      req.user.username,
-    );
-    delete userInfo.password;
-
-    return userInfo;
   }
 
   @ApiBearerAuth()
