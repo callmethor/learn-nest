@@ -8,7 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/modules/users/users.service';
 import { SignInDto, SignUpDto } from './dto';
 import { UsersEntity } from '../users/entities/users.entity';
-import { hashPassword, isMatch } from 'src/utils/hashPassword';
+import { hashPassword, isMatch } from 'src/utils';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { v4 as uuidv4 } from 'uuid';
@@ -68,10 +68,7 @@ export class AuthService {
     this.updateRefreshTokenHash(filteredUsers?.id, tokens?.refresh_token);
     delete filteredUsers?.password;
 
-    return {
-      ...filteredUsers,
-      ...tokens,
-    };
+    return tokens;
   }
 
   async logout(userId: string) {

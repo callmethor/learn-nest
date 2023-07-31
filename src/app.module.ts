@@ -8,6 +8,7 @@ import { RolesGuard } from './guard/roles.guard';
 import { AuthGuard } from './guard/auth.guard';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersEntity } from './modules/users/entities/users.entity';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
@@ -24,6 +25,10 @@ import { UsersEntity } from './modules/users/entities/users.entity';
       synchronize: true,
       autoLoadEntities: true,
     }),
+    ThrottlerModule.forRoot({
+      ttl: 60,
+      limit: 10,
+    }),
   ],
   // AuthGuard must be defined before RolesGuard
   providers: [
@@ -35,6 +40,10 @@ import { UsersEntity } from './modules/users/entities/users.entity';
     {
       provide: APP_GUARD,
       useClass: RolesGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
     },
   ],
 })
