@@ -8,7 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/modules/users/users.service';
 import { SignInDto, SignUpDto } from './dto';
 import { UsersEntity } from '../users/entities/users.entity';
-import { hashPassword, isMatch } from 'src/utils/hashPassword';
+import { hashPassword, isMatch } from 'src/utils';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { v4 as uuidv4 } from 'uuid';
