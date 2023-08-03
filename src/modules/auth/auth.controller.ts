@@ -17,6 +17,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { UsersEntity } from '../users/entities/users.entity';
+import jwt_decode from 'jwt-decode';
 
 @ApiTags('Auth Controller')
 @Controller('auth')
@@ -71,12 +72,13 @@ export class AuthController {
     return this.authService.logout(user?.sub);
   }
 
+  @Public()
   @ApiBearerAuth()
-  @Get('refresh')
+  @Post('refresh')
   @HttpCode(HttpStatus.OK)
   refreshToken(@Req() req) {
-    const user = req?.user;
-    const refreshToken = req.get('authorization').replace('Bearer', '').trim();
+    const refreshToken = req?.body.refreshToken;
+    const user: any = jwt_decode(refreshToken);
 
     return this.authService.refreshToken(user?.sub, refreshToken);
   }
