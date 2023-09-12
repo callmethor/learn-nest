@@ -25,6 +25,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
       synchronize: true,
       autoLoadEntities: true,
     }),
+    // Configure ThrottlerModule to limit a maximum of 30 requests per 60 seconds
     ThrottlerModule.forRoot({
       ttl: 60,
       limit: 30,
